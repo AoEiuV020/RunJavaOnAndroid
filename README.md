@@ -21,3 +21,12 @@
 使用okhttp3请求"http://baidu.com",  
 主要是证明这个可以自动处理依赖，  
 okhttp3依赖的okio自动包含了，  
+
+# groovyShell(已删除)
+想在安卓上运行GroovyShell，  
+失败，  
+
+# json
+调用安卓自带的json库，  
+jdk上并不存在，所以电脑上运行失败，安卓上运行正常，  
+主要是证明现在编译时是在android.jar找原生类，  
