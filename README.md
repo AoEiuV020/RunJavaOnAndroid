@@ -13,3 +13,11 @@
 
 ## dalvikvm
 使用adb shell调用安卓命令dalvikvm运行程序，  
+
+# app
+一个hello仅此而已，  
+
+# okhttp
+使用okhttp3请求"http://baidu.com",  
+主要是证明这个可以自动处理依赖，  
+okhttp3依赖的okio自动包含了，  
