@@ -1,0 +1,52 @@
+apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = "aoeiuv020.Main"
+repositories {
+    jcenter()
+}
+run{
+	standardInput = System.in
+}
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+	compile localGroovy()
+    testCompile 'junit:junit:4.12'
+}
+allprojects {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sSdkDir = properties.getProperty('sdk.dir')
+def sBuildToolsVersion='25.0.2'
+def sTmpDir='/data/local/tmp'
+def fSdkPath=new File(sSdkDir)
+def fBuildTools=new File(sSdkDir,'build-tools')
+fBuildTools=new File(fBuildTools,sBuildToolsVersion)
+def fDx=new File(fBuildTools,'dx')
+def fPlatformTools=new File(sSdkDir,'platform-tools')
+def fAdb=new File(fPlatformTools,'adb')
+def fOutputDex=new File(project.buildDir,"${project.name}.dex")
+task dx(type:Exec,dependsOn:'jar'){
+	executable(fDx)
+	args('--dex')
+	args("--output=${fOutputDex}")
+	args(jar.archivePath)
+	args(configurations.compile.getFiles())
+}
+task push(type:Exec,dependsOn:'dx'){
+	executable(fAdb)
+	args('push')
+	args(fOutputDex)
+	args(sTmpDir)
+	standardOutput=new java.io.ByteArrayOutputStream()
+}
+task dalvikvm(type:Exec,dependsOn:'push'){
+	executable(fAdb)
+	args('shell')
+	args("CLASSPATH=$sTmpDir/$fOutputDex.name")
+	args('dalvikvm')
+	args(mainClassName)
+}
