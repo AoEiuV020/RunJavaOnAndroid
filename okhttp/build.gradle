@@ -9,14 +9,11 @@ dependencies {
 	compile 'com.squareup.okhttp3:okhttp:3.6.0'
     testCompile 'junit:junit:4.12'
 }
-allprojects {
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-}
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def sSdkDir = properties.getProperty('sdk.dir')
+def iCompileSdkVersion=25
 def sBuildToolsVersion='25.0.2'
 def sTmpDir='/data/local/tmp'
 def fSdkPath=new File(sSdkDir)
@@ -24,8 +21,16 @@ def fBuildTools=new File(sSdkDir,'build-tools')
 fBuildTools=new File(fBuildTools,sBuildToolsVersion)
 def fDx=new File(fBuildTools,'dx')
 def fPlatformTools=new File(sSdkDir,'platform-tools')
+def fPlatforms=new File(sSdkDir,'platforms')
+fPlatforms=new File(fPlatforms,"android-$iCompileSdkVersion")
+def fAndroidJar=new File(fPlatforms,'android.jar')
 def fAdb=new File(fPlatformTools,'adb')
 def fOutputDex=new File(project.buildDir,"${project.name}.dex")
+compileJava {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+	options.bootClasspath = fAndroidJar
+}
 task dx(type:Exec,dependsOn:'jar'){
 	inputs.file(jar.archivePath)
 	inputs.files(configurations.compile.getFiles())
