@@ -8,9 +8,9 @@ import java.io.*;
 public class Main{
 	public static void main(String[] args)throws Exception{
 		Main app=new Main();
-		app.testGuavaToString();
+		app.greeting();
 	}
-	void testGuavaToString()throws Exception{
+	void greeting()throws Exception{
 		System.out.println("hello");
 	}
 }
