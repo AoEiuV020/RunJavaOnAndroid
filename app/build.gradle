@@ -13,14 +13,16 @@ allprojects {
     targetCompatibility = 1.7
 }
 
-def sSdkPath='/home/aoeiuv/Android/Sdk'
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sSdkDir = properties.getProperty('sdk.dir')
 def sBuildToolsVersion='25.0.2'
 def sTmpDir='/data/local/tmp'
-def fSdkPath=new File(sSdkPath)
-def fBuildTools=new File(sSdkPath,'build-tools')
+def fSdkPath=new File(sSdkDir)
+def fBuildTools=new File(sSdkDir,'build-tools')
 fBuildTools=new File(fBuildTools,sBuildToolsVersion)
 def fDx=new File(fBuildTools,'dx')
-def fPlatformTools=new File(sSdkPath,'platform-tools')
+def fPlatformTools=new File(sSdkDir,'platform-tools')
 def fAdb=new File(fPlatformTools,'adb')
 def fOutputDex=new File(project.buildDir,"${project.name}.dex")
 task dx(type:Exec,dependsOn:'jar'){
