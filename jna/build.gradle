@@ -27,7 +27,6 @@ fPlatforms=new File(fPlatforms,"android-$iCompileSdkVersion")
 def fAndroidJar=new File(fPlatforms,'android.jar')
 def fAdb=new File(fPlatformTools,'adb')
 def fOutputDex=new File(project.buildDir,"classes.dex")
-def sRejarArchiveName="${project.name}-${project.version}-dex.jar"
 compileJava {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
@@ -48,7 +47,7 @@ task rejar(type:Jar,dependsOn:'dx'){
     from(project.buildDir){
         include "${fOutputDex.name}"
     }
-    archiveName=sRejarArchiveName
+    appendix="dex"
 }
 task push(type:Exec,dependsOn:'rejar'){
 	executable(fAdb)
