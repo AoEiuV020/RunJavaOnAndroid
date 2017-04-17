@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = 'aoeiuv020.Main'
+version = '0.1'
 repositories {
     jcenter()
 }
@@ -26,7 +27,7 @@ fPlatforms=new File(fPlatforms,"android-$iCompileSdkVersion")
 def fAndroidJar=new File(fPlatforms,'android.jar')
 def fAdb=new File(fPlatformTools,'adb')
 def fOutputDex=new File(project.buildDir,"classes.dex")
-def sRejarArchiveName="${project.name}-${project.version}.jar"
+def sRejarArchiveName="${project.name}-${project.version}-dex.jar"
 compileJava {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
