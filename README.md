@@ -30,3 +30,8 @@ okhttp3依赖的okio自动包含了，
 调用安卓自带的json库，  
 jdk上并不存在，所以电脑上运行失败，安卓上运行正常，  
 主要是证明现在编译时是在android.jar找原生类，  
+
+# jna
+通过jna库，在安卓上调用c语言库,
+主要是下载jna库用到的安卓libjnidispatch.so并重新和classes.dex一起打包成jar文件，
+没有实现也没必要将jna.jar里的库资源解压出来打包，

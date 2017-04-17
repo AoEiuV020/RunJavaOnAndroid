@@ -1,0 +1,63 @@
+apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'aoeiuv020.Main'
+repositories {
+    jcenter()
+}
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'net.java.dev.jna:jna:4.4.0'
+    testCompile 'junit:junit:4.12'
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sSdkDir = properties.getProperty('sdk.dir')
+def iCompileSdkVersion=25
+def sBuildToolsVersion='25.0.2'
+def sTmpDir='/data/local/tmp'
+def fSdkPath=new File(sSdkDir)
+def fBuildTools=new File(sSdkDir,'build-tools')
+fBuildTools=new File(fBuildTools,sBuildToolsVersion)
+def fDx=new File(fBuildTools,'dx')
+def fPlatformTools=new File(sSdkDir,'platform-tools')
+def fPlatforms=new File(sSdkDir,'platforms')
+fPlatforms=new File(fPlatforms,"android-$iCompileSdkVersion")
+def fAndroidJar=new File(fPlatforms,'android.jar')
+def fAdb=new File(fPlatformTools,'adb')
+def fOutputDex=new File(project.buildDir,"classes.dex")
+compileJava {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+	options.bootClasspath = fAndroidJar
+}
+task dx(type:Exec,dependsOn:'jar'){
+	inputs.file(jar.archivePath)
+	inputs.files(configurations.compile.getFiles())
+	outputs.file(fOutputDex)
+	executable(fDx)
+	args('--dex')
+	args("--output=${fOutputDex}")
+	args(jar.archivePath)
+	args(configurations.compile.getFiles())
+}
+task rejar(type:Jar,dependsOn:'dx'){
+    from sourceSets.main.resources
+    from(project.buildDir){
+        include "${fOutputDex.name}"
+    }
+}
+task push(type:Exec,dependsOn:'rejar'){
+	executable(fAdb)
+	args('push')
+	args(jar.archivePath)
+	args(sTmpDir)
+	standardOutput=new java.io.ByteArrayOutputStream()
+}
+task dalvikvm(type:Exec,dependsOn:'push'){
+	executable(fAdb)
+	args('shell')
+	args("CLASSPATH=$sTmpDir/$jar.archivePath.name")
+	args('dalvikvm')
+	args(mainClassName)
+}
