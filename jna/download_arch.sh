@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
-res_path=$(dirname $0)/src/main/resources/
+res_path=$(dirname $0)/src/main/resources
 tmp_folder='/tmp'
 download(){
     jna_commit='77caa1cbf86eb1b41f2b201a78c847b6e0f58fdb'
