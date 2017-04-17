@@ -26,6 +26,7 @@ fPlatforms=new File(fPlatforms,"android-$iCompileSdkVersion")
 def fAndroidJar=new File(fPlatforms,'android.jar')
 def fAdb=new File(fPlatformTools,'adb')
 def fOutputDex=new File(project.buildDir,"classes.dex")
+def sRejarArchiveName="${project.name}-${project.version}.jar"
 compileJava {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
@@ -46,18 +47,19 @@ task rejar(type:Jar,dependsOn:'dx'){
     from(project.buildDir){
         include "${fOutputDex.name}"
     }
+    archiveName=sRejarArchiveName
 }
 task push(type:Exec,dependsOn:'rejar'){
 	executable(fAdb)
 	args('push')
-	args(jar.archivePath)
+	args(rejar.archivePath)
 	args(sTmpDir)
 	standardOutput=new java.io.ByteArrayOutputStream()
 }
 task dalvikvm(type:Exec,dependsOn:'push'){
 	executable(fAdb)
 	args('shell')
-	args("CLASSPATH=$sTmpDir/$jar.archivePath.name")
+	args("CLASSPATH=$sTmpDir/$rejar.archivePath.name")
 	args('dalvikvm')
 	args(mainClassName)
 }
