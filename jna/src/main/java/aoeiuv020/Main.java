@@ -7,9 +7,6 @@ import com.sun.jna.*;
  */
 public class Main{
     static{
-        String tmpdir="/data/local/tmp";
-        if(new File(tmpdir).exists())
-            System.setProperty("java.io.tmpdir",tmpdir);
         try{
             Class.forName(Platform.class.getName());
         }catch(Exception ignore){

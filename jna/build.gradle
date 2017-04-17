@@ -61,5 +61,6 @@ task dalvikvm(type:Exec,dependsOn:'push'){
 	args('shell')
 	args("CLASSPATH=$sTmpDir/$rejar.archivePath.name")
 	args('dalvikvm')
+	args("-Djava.io.tmpdir=${sTmpDir}")
 	args(mainClassName)
 }
