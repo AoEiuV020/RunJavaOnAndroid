@@ -8,8 +8,19 @@ import org.json.*;
  */
 public class Main{
 	public static void main(String[] args)throws Exception{
-		JSONObject object=new JSONObject("{\"age\":22}");
-		System.out.println(object.toString(4));
+        JSONArray arr = new JSONArray("[null]");
+        assertTrue(arr.optString(0, null) != null);
+        assertTrue(arr.optString(1, null) == null);
+        assertTrue(arr.getString(0) != null);
+        JSONObject obj = new JSONObject("{\"key\" = null}");
+        assertTrue(obj.optString("key", null) != null);
+        assertTrue(obj.optString("none", null) == null);
+        assertTrue(obj.getString("key") != null);
 	}
+    private static void assertTrue(boolean b) {
+        if (!b) {
+            throw new AssertionError();
+        }
+    }
 }
 
